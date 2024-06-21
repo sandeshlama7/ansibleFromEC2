@@ -1,0 +1,59 @@
+- name: Clone git repo
+  git:
+    repo: "https://github.com/yeshwanthlm/django-on-ec2.git"
+    dest: "{{ project_dir }}"
+    force: yes
+
+- name: Update apt
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+- name: Install python3-venv
+  apt:
+    name: python3-venv
+    state: present
+
+- name: Change permissions of manage.py
+  file:
+    path: "{{ project_dir }}/manage.py"
+    mode: '0755'
+
+- name: Create a virtual environment inside the project directory
+  shell: python3 -m venv virtualenv
+  args:
+    chdir: "{{ project_dir }}"
+
+- name: Activate venv
+  shell: ". {{ venv_dir }}/bin/activate"
+  args:
+    executable: /bin/bash
+
+- name: Upgrade pip in virtual environment
+  pip:
+    executable: "{{ venv_dir }}/bin/pip"
+    name: pip
+    state: latest
+
+
+- name: Install Django in virtual environment
+  pip:
+    executable: "{{ venv_dir }}/bin/pip"
+    name: django
+
+- name: Make migrations
+  django_manage:
+    command: makemigrations
+    project_path: "{{ project_dir }}"
+    virtualenv: "{{ venv_dir }}"
+
+- name: Migrate
+  django_manage:
+    command: migrate
+    project_path: "{{ project_dir }}"
+    virtualenv: "{{ venv_dir }}"
+
+- name: Create systemd service file for Django application
+  ansible.builtin.template:
+    src: django.j2
+    dest: /etc/systemd/system/django.service

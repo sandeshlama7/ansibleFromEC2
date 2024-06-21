@@ -1,0 +1,13 @@
+[Unit]
+Description=Django Application
+After=network.target
+
+[Service]
+User= ubuntu
+Group= ubuntu
+WorkingDirectory={{ project_dir }}
+ExecStart={{ venv_dir }}/bin/python manage.py runserver 0.0.0.0:8000
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
