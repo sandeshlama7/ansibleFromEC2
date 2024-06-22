@@ -1,12 +1,12 @@
 ---
 - name: Django Application Hosting
-  hosts: localhost
+  hosts: all
   become: true
   gather_facts: false
   vars:
     ansible_connection: ssh
     ansible_user: ubuntu
-    ansible_ssh_private_key_file: ~/.ssh/id_rsa
+    ansible_ssh_private_key_file: /Users/sandesh/Downloads/Key-Sandesh.pem
 
   roles:
     - django
