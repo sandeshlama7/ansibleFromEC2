@@ -1,4 +1,10 @@
-- name: Start Django service
-  systemd:
-    name: django
-    state: started
+- name: start django
+  block:
+  - name: Reload systemd to apply changes
+    systemd:
+      daemon_reload: yes
+
+  - name: Start django service
+    systemd:
+      name: django
+      state: started
