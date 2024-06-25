@@ -61,10 +61,7 @@ resource "null_resource" "ansible" {
   depends_on = [module.ec2]
   provisioner "local-exec" {
     command = <<EOT
-    sleep 30
-    echo "[ec2]" > ec2-ansible/inventory.ini
-    echo ${module.ec2.public_ip} >> ec2-ansible/inventory.ini
-    ansible-playbook -i ec2-ansible/inventory.ini ec2-ansible/playbook.yml -u ubuntu --private-key /Users/sandesh/Downloads/Key-Sandesh.pem --ssh-extra-args='-o StrictHostKeyChecking=no' -v
+    ansible-playbook -i ec2-ansible/aws_ec2.yml ec2-ansible/playbook.yml -v
   EOT
   }
 }

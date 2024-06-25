@@ -12,7 +12,7 @@ variable "names" {
   description = "Names for different resources"
   type        = map(string)
   default = {
-    "ec2" = "ec2-terraform-module-sandesh"
+    "ec2" = "DjangoServer-Sandesh"
     "sg"  = "module-sg-sandesh"
   }
 }
@@ -33,20 +33,12 @@ variable "associate_public_ip" {
   default     = false
 }
 
-# variable "vpc_id" {
-#   description = "Id of the VPC"
-#   type        = string
-# }
 
 variable "iam_profile" {
   description = "IAM Role Name to attach to the EC2 to allow SSM"
   type        = string
 }
 
-# variable "user_data" {
-#   description = "User data for EC2"
-#   type = string
-# }
 
 variable "security_group" {
   description = "SG ID"

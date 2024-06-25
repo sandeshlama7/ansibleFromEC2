@@ -9,7 +9,6 @@ resource "aws_instance" "module-ec2" {
   tags = {
     Name = var.names.ec2
   }
-  # user_data = var.user_data
 }
 
 output "public_ip" {
