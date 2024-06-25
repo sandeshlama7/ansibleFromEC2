@@ -55,5 +55,3 @@
 
 - name: Run Django App
   command: nohup {{ venv_dir }}/bin/python {{ project_dir }}/manage.py runserver 0.0.0.0:8000 &
-  args:
-    executable: /bin/bash
