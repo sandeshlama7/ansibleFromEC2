@@ -4,10 +4,9 @@ module "ec2" {
   instance_type       = "t2.micro"
   subnet_id           = "subnet-0639d260294d92a5d"
   associate_public_ip = true
-  vpc_id              = data.aws_vpc.vpc.id
   iam_profile         = data.aws_iam_instance_profile.iam.name
   ssh-key             = "Key-Sandesh"
-  user_data           = file("./userdata.sh")
+  security_group      = aws_security_group.module-sg.id
 }
 
 data "aws_vpc" "vpc" {
@@ -16,4 +15,53 @@ data "aws_vpc" "vpc" {
 
 data "aws_iam_instance_profile" "iam" {
   name = "SSM-Sandesh"
+}
+
+resource "aws_security_group" "module-sg" {
+  name        = "SG-module-sandesh"
+  description = "SG for the Public Instance"
+  vpc_id      = data.aws_vpc.vpc.id
+  tags = {
+    Name = "SG-module-sandesh"
+  }
+
+  ingress {
+    description = "Allow HTTP"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+  }
+
+  ingress {
+    description = "ALLOW SSH"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+  }
+  ingress {
+    description = "Django App Port"
+    cidr_blocks = ["0.0.0.0/0"]
+    from_port   = 8000
+    to_port     = 8000
+    protocol    = "tcp"
+  }
+
+  egress {
+    description = "Outbound Rules to Allow All Outbound"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "null_resource" "ansible" {
+  depends_on = [module.ec2]
+  provisioner "local-exec" {
+    command = <<EOT
+    ansible-playbook -i ec2-ansible/aws_ec2.yml ec2-ansible/playbook.yml -v
+  EOT
+  }
 }
