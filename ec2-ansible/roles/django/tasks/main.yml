@@ -4,15 +4,11 @@
     dest: "{{ project_dir }}"
     force: yes
 
-- name: Update apt
-  apt:
-    update_cache: yes
-    upgrade: dist
-
 - name: Install python3-venv
   apt:
     name: python3-venv
     state: present
+    update_cache: yes
 
 - name: Change permissions of manage.py
   file:
@@ -20,9 +16,9 @@
     mode: '0755'
 
 - name: Create a virtual environment inside the project directory
-  shell: python3 -m venv virtualenv
-  args:
-    chdir: "{{ project_dir }}"
+  pip:
+    virtualenv: {{ venv_dir }}
+    virtualenv_python: python3.10
 
 - name: Activate venv
   shell: ". {{ venv_dir }}/bin/activate"
@@ -34,7 +30,6 @@
     executable: "{{ venv_dir }}/bin/pip"
     name: pip
     state: latest
-
 
 - name: Install Django in virtual environment
   pip:
@@ -54,4 +49,4 @@
     virtualenv: "{{ venv_dir }}"
 
 - name: Run Django App
-  command: nohup {{ venv_dir }}/bin/python {{ project_dir }}/manage.py runserver 0.0.0.0:8000 &
+  shell: nohup {{ venv_dir }}/bin/python {{ project_dir }}/manage.py runserver 0.0.0.0:8000 &
