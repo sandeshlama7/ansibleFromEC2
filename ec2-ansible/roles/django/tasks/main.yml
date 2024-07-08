@@ -17,7 +17,7 @@
     path: "{{ project_dir }}/manage.py"
     mode: '0755'
 
-- name: Create a virtual environment inside the project directory
+- name: Create a virtual environment inside the project directory and install django
   pip:
     name: django
     chdir: "{{ project_dir }}"
@@ -34,11 +34,6 @@
     executable: "{{ venv_dir }}/bin/pip"
     name: pip
     state: latest
-
-- name: Install Django in virtual environment
-  pip:
-    executable: "{{ venv_dir }}/bin/pip"
-    name: django
 
 - name: Make migrations
   django_manage:
