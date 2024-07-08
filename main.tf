@@ -25,21 +25,6 @@ resource "aws_security_group" "module-sg" {
     Name = "SG-module-sandesh"
   }
 
-  # ingress {
-  #   description = "Allow HTTP"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  #   from_port   = 80
-  #   to_port     = 80
-  #   protocol    = "tcp"
-  # }
-
-  # ingress {
-  #   description = "ALLOW SSH"
-  #   cidr_blocks = ["0.0.0.0/0"]
-  #   from_port   = 22
-  #   to_port     = 22
-  #   protocol    = "tcp"
-  # }
   ingress {
     description = "Django App Port"
     cidr_blocks = ["0.0.0.0/0"]

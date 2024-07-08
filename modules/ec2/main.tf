@@ -11,6 +11,3 @@ resource "aws_instance" "module-ec2" {
   }
 }
 
-# output "public_ip" {
-#   value = aws_instance.module-ec2.public_ip
-# }
